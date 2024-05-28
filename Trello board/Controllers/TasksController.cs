@@ -1,7 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-
 namespace Trello_board.Controllers
 {
     [Route("api/[controller]")]
@@ -55,7 +53,7 @@ namespace Trello_board.Controllers
 
         public async Task<IActionResult> PutTask(int Id, Trello_board.Models.Task task)
         {
-            
+
             if (Id != task.Id)
             {
                 return BadRequest();
