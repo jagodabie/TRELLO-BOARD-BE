@@ -1,31 +1,34 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 namespace Trello_board.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     public class TasksController : ControllerBase
     {
-        private readonly TaskContext _taskContext;
+        private readonly BoardContext _boardContext;
 
-        public TasksController(TaskContext taskContext)
+        public TasksController(BoardContext boardContext)
         {
-            _taskContext = taskContext;
+            _boardContext = boardContext;
         }
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Trello_board.Models.Task>>> GetTasks()
         {
-            if (_taskContext.Tasks == null)
+            if (_boardContext.Tasks == null)
             {
                 return NotFound();
             }
-            return await _taskContext.Tasks.ToListAsync();
+            return await _boardContext.Tasks.ToListAsync();
         }
 
         [HttpGet("{Id}")]
         public async Task<ActionResult<Trello_board.Models.Task>> GetTask(int Id)
         {
-            var task = await _taskContext.Tasks.FindAsync(Id);
+            var task = await _boardContext.Tasks.FindAsync(Id);
 
             if (task == null)
             {
@@ -38,15 +41,15 @@ namespace Trello_board.Controllers
         [HttpPost("{Id}")]
         public async Task<ActionResult<Trello_board.Models.Task>> PostTask(Trello_board.Models.Task task)
         {
-            _taskContext.Tasks.Add(task);
-            await _taskContext.SaveChangesAsync();
+            _boardContext.Tasks.Add(task);
+            await _boardContext.SaveChangesAsync();
 
             return CreatedAtAction("GetTask", new { Id = task.Id }, task);
         }
 
         private bool TaskExists(long Id)
         {
-            return (_taskContext.Tasks.Any(e => e.Id == Id));
+            return (_boardContext.Tasks.Any(e => e.Id == Id));
         }
 
         [HttpPut]
@@ -59,11 +62,11 @@ namespace Trello_board.Controllers
                 return BadRequest();
             }
 
-            _taskContext.Entry(task).State = EntityState.Modified;
+            _boardContext.Entry(task).State = EntityState.Modified;
 
             try
             {
-                await _taskContext.SaveChangesAsync();
+                await _boardContext.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -80,17 +83,18 @@ namespace Trello_board.Controllers
             return NoContent();
         }
 
+
         [HttpDelete("{Id}")]
         public async Task<IActionResult> DeleteTask(int Id)
         {
-            var task = await _taskContext.Tasks.FindAsync(Id);
+            var task = await _boardContext.Tasks.FindAsync(Id);
             if (task == null)
             {
                 return NotFound();
             }
 
-            _taskContext.Tasks.Remove(task);
-            await _taskContext.SaveChangesAsync();
+            _boardContext.Tasks.Remove(task);
+            await _boardContext.SaveChangesAsync();
 
             return NoContent();
         }

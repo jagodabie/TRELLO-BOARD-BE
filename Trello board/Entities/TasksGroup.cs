@@ -1,31 +1,20 @@
 ﻿
 
-namespace Trello_board.Models
+using System;
+using System.Collections.Generic;
+using Trello_board.Entities;
+using Trello_board.Models;
+
+public class TasksGroup
 {
-    public class TasksGroup
-    {
-        public int Id;
-        public string Name;
+    public int Id;
+    public string Name;
+    public int WorkspaceId;
+    public Workspace Workspace { get; set; }
+    public int AuthorId { get; set; }
+    public User Author { get; set; }
+    public DateTime CreatedAt { get; set; }
+    public DateTime? UpdatedAt { get; set; }
+    public List<Task> Tasks { get; set; } = new List<Task>();
 
-        public string WorkspaceId;
-
-        public string? UserId { get; set; }
-        public string CreatedAt { get; set; }
-        public string? UpdatedAt { get; set; }
-
-        public List<Task> Tasks { get; set; }
-
-        public TasksGroup(int id, string name, string workspaceId, string userId, string createdAt, string updatedAt, List<Task> tasks)
-        {
-            Id = id;
-            Name = name;
-            WorkspaceId = workspaceId;
-            UserId = userId;
-            CreatedAt = createdAt;
-            UpdatedAt = updatedAt;
-            Tasks = tasks;
-        }
-
-
-    }
 }
